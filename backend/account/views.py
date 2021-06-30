@@ -55,7 +55,20 @@ class LoginAPIView(APIView):
         return response
 
 
-class UserAPIView(APIView):
+class LogoutAPIView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, _):
+        response = Response()
+        response.delete_cookie(key='jwt')
+        response.data = {
+            'message': 'success'
+        }
+        return response
+
+
+class UserDetailAPIView(APIView):
     '''A view for getting the user data'''
     
     authentication_classes = [JWTAuthentication]
@@ -71,20 +84,9 @@ class UserAPIView(APIView):
         return Response(data)
 
 
-class LogoutAPIView(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+class UserInfoUpdateAPIView(APIView):
+    '''A view for getting the user data'''
 
-    def post(self, _):
-        response = Response()
-        response.delete_cookie(key='jwt')
-        response.data = {
-            'message': 'success'
-        }
-        return response
-
-
-class ProfileInfoAPIView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -96,7 +98,7 @@ class ProfileInfoAPIView(APIView):
         return Response(serializer.data)
 
 
-class ProfilePasswordAPIView(APIView):
+class UserPasswordUpdateAPIView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
