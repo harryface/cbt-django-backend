@@ -2,7 +2,6 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
 
 
 
@@ -10,7 +9,7 @@
 <br />
 <p align="center">
   
-  <h3 align="center">A CBT(RESTapi) app created with Djnago, consumed with ReactJS</h3>
+  <h3 align="center">A CBT(RESTful api) app created with Djnago, consumed with ReactJS</h3>
   
 </p>
 
@@ -23,7 +22,6 @@ It will also have the ability to automatically submit answers after the taker ha
 
 ### Built With
 
-This section should list any major frameworks that you built your project using. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
 * [Bootstrap](https://getbootstrap.com)
 * [ReactJS](https://reactjs.org)
 * [Django](https://djangoproject.com)
@@ -34,8 +32,7 @@ This section should list any major frameworks that you built your project using.
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+We have simple basic steps that can be performed to get us started.
 
 ### Installation (Backend)
 
