@@ -41,7 +41,7 @@ To get a local copy up and running follow these simple example steps.
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/harryface/cbt.git
+   git clone https://github.com/harryface/cbt-django-react.git
    ```
 2. Create a virtual environment on your local system
    ```sh
@@ -102,7 +102,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 Harry Ilonze - harryilonze@yahoo.com
 
-Project Link: [https://github.com/harryface/cbt](https://github.com/harryface/cbt)
+Project Link: [https://github.com/harryface/cbt-django-react](https://github.com/harryface/cbt-django-react)
 
 
 
@@ -120,11 +120,11 @@ Project Link: [https://github.com/harryface/cbt](https://github.com/harryface/cb
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[forks-shield]: https://img.shields.io/github/forks/harryface/cbt.svg?style=for-the-badge
-[forks-url]: https://github.com/harryface/cbt/network/members
-[stars-shield]: https://img.shields.io/github/stars/harryface/cbt.svg?style=for-the-badge
-[stars-url]: https://github.com/harryface/cbt/stargazers
-[issues-shield]: https://img.shields.io/github/issues/harryface/cbt.svg?style=for-the-badge
-[issues-url]: https://github.com/harryface/cbt/issues
-[license-shield]: https://img.shields.io/github/license/harryface/cbt.svg?style=for-the-badge
-[license-url]: https://github.com/harryface/cbt/blob/master/LICENSE.txt
+[forks-shield]: https://img.shields.io/github/forks/harryface/cbt-django-react.svg?style=for-the-badge
+[forks-url]: https://github.com/harryface/cbt-django-react/network/members
+[stars-shield]: https://img.shields.io/github/stars/harryface/cbt-django-react.svg?style=for-the-badge
+[stars-url]: https://github.com/harryface/cbt-django-react/stargazers
+[issues-shield]: https://img.shields.io/github/issues/harryface/cbt-django-react.svg?style=for-the-badge
+[issues-url]: https://github.com/harryface/cbt-django-react/issues
+[license-shield]: https://img.shields.io/github/license/harryface/cbt-django-react.svg?style=for-the-badge
+[license-url]: https://github.com/harryface/cbt-django-react/blob/master/LICENSE.txt
