@@ -9,7 +9,7 @@
 <br />
 <p align="center">
   
-  <h3 align="center">A CBT(RESTful api) app created with Djnago, consumed with ReactJS</h3>
+  <h3 align="center">A CBT(RESTful api) app created with Django, consumed with ReactJS</h3>
   
 </p>
 
