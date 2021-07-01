@@ -11,7 +11,6 @@ CHOICES = (
     ('E', 'option5'),
 )
 
-
 def upload_image(instance, filename):
     return f"{instance.pk}/{filename}"
 
