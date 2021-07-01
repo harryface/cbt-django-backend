@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models.signals import post_save, pre_save
 
+from core.models import Exam
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None):
@@ -47,6 +49,7 @@ class CustomUser(AbstractUser):
     email = models.CharField(max_length=255, unique=True)
     password = models.CharField(max_length=255)
     is_examiner = models.BooleanField(default=True)
+    exam = models.ManyToManyField(Exam, related_name='registered_exams')
     username = None
 
     USERNAME_FIELD = 'email'

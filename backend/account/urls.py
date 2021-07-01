@@ -11,6 +11,6 @@ urlpatterns = [
     path('login', LoginAPIView.as_view()),
     path('user', UserDetailAPIView.as_view()),
     path('logout', LogoutAPIView.as_view()),
-    path('users/info', UserInfoUpdateAPIView.as_view()),
-    path('users/password', UserPasswordUpdateAPIView.as_view()),
+    path('user/info', UserInfoUpdateAPIView.as_view()),
+    path('user/password', UserPasswordUpdateAPIView.as_view()),
 ]
