@@ -116,9 +116,9 @@ class AnswerSerializer(serializers.ModelSerializer):
 
 
 class TakerAnswerSerialiszer(serializers.Serializer):
-    taker_id = serializers.PrimaryKeyRelatedField()
-    exam_id = serializers.PrimaryKeyRelatedField()
-    question_id = serializers.PrimaryKeyRelatedField()
+    taker_id = serializers.IntegerField()
+    exam_id = serializers.IntegerField()
+    question_id = serializers.IntegerField()
     taker_choice = serializers.CharField(max_length=200)
 
     def create(self, validated_data):

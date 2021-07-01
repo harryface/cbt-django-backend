@@ -1,6 +1,6 @@
 from django.urls import path
 
-from views.examiner import (
+from core.views.examiner import (
     ExamGenericAPIView
 )
 
