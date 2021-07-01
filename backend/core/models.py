@@ -34,10 +34,7 @@ class Question(models.Model):
     '''Database model for question'''
     
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name='questions')
-    exam_image = models.ImageField(upload_to=upload_image, null=True, blank=True, \
-        height_field='height_field', width_field='width_field')
-    height_field = models.IntegerField(default=0)
-    width_field = models.IntegerField(default=0)
+    exam_image = models.ImageField(upload_to=upload_image, null=True, blank=True)
     question = models.TextField(max_length=500)
     option1 = models.CharField(max_length=255)
     option2 = models.CharField(max_length=255)
@@ -45,9 +42,15 @@ class Question(models.Model):
     option4 = models.CharField(max_length=255)
     option5 = models.CharField(max_length=255, blank=True)
     answer = models.CharField(max_length=255, choices=CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.text
+
+    @property
+    def is_correct(self, option):
+        return self.answer == option
     
     
 class Result(models.Model):
@@ -67,10 +70,15 @@ class Result(models.Model):
 class Answer(models.Model):
     taker = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,\
         related_name='user_answers')
-    result = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name='result_answers')
+    exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name='exam_answers')
     question = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name='question_answers')
     taker_choice = models.CharField(max_length=10, choices=CHOICES)
-    correct_choice = models.CharField(max_length=10, choices=CHOICES)
+    is_correct = models.BooleanField(default=False)
+
+    def save(self) -> None:
+        if not self.pk:
+            self.is_correct = self.question.answer == self.taker_choice
+        return super().save()
     
     
     
