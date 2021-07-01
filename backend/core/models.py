@@ -18,15 +18,15 @@ def upload_image(instance, filename):
 class Exam(models.Model):
     '''Database model for examination'''
     
-    name = models.CharField(max_length=255)
+    title = models.CharField(max_length=255)
     is_available = models.BooleanField(default=False)
-    duration = models.DurationField(default='00:00:00')
+    duration = models.PositiveIntegerField('Time in seconds', default=60)
     instructions = models.TextField(default=' ')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return self.name
+        return self.title
 
 
 class Question(models.Model):
