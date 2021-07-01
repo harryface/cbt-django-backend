@@ -1,5 +1,25 @@
-Model
-- Exam
-- Question
-- Result
-- User (Admin, Exam Taker)
+###User API routes###
+
+api/account/register
+api/account/login
+api/account/logout
+api/account/user
+api/account/user/info
+api/account/user/password
+
+###Core API routes###
+
+##Examiner##
+
+api/core/exams                          \\ CRUD exams and questions     ALL
+api/core/register/<int: user_pk>/exams  \\ register students for exams  POST
+api/core/<int: user_pk>/exams           \\ view exams(answers and result inclusive) taken by student    GET
+api/core/<int: user_pk>/results         \\ view students result     GET
+api/core/<int: exam_pk>/results         \\ view all the result(with takers) for a particular exam   GET
+
+##Taker##
+(, , )
+api/core/<int: exam_pk>/exam            \\ view all eligible exam   GET
+api/core/<int: user_pk>/exams           \\ View one exam and all questions  GET
+api/core/<int: user_pk>/results         \\ view all available result    GET
+
