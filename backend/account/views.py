@@ -16,7 +16,7 @@ class RegisterAPIView(APIView):
         if data['password'] != data['password_confirm']:
             raise exceptions.APIException('Passwords do not match!')
 
-        data['is_examiner'] = 'api/examiner' in request.path
+        data['is_examiner'] = 'examiner' in request.path
 
         serializer = UserSerializer(data=data)
         serializer.is_valid(raise_exception=True)
@@ -39,7 +39,7 @@ class LoginAPIView(APIView):
         if not user.check_password(password):
             raise exceptions.AuthenticationFailed('Incorrect Password!')
 
-        scope = 'examiner' if 'api/examiner' in request.path else 'taker'
+        scope = 'examiner' if 'examiner' in request.path else 'taker'
 
         if user.is_examiner and scope == 'taker':
             raise exceptions.AuthenticationFailed('Unauthorized')
@@ -77,9 +77,6 @@ class UserDetailAPIView(APIView):
     def get(self, request):
         user = request.user
         data = UserSerializer(user).data
-
-        # if 'api/examiner' in request.path:
-        #     data['revenue'] = user.revenue
 
         return Response(data)
 

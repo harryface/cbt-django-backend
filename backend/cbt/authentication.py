@@ -9,7 +9,7 @@ from account.models import CustomUser
 class JWTAuthentication(BaseAuthentication):
 
     def authenticate(self, request):
-        is_examiner = 'api/examiner' in request.path
+        is_examiner = 'examiner' in request.path
 
         token = request.COOKIES.get('jwt')
 
