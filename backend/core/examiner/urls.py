@@ -1,3 +1,4 @@
+from rest_framework import routers
 from django.urls import path
 
 from account.views import (
@@ -6,11 +7,17 @@ from account.views import (
 )
 
 from .views import (
-    ExamGenericAPIView
+    ExamGenericAPIView, AddStudentExamAPIView
 )
+
+router = routers.DefaultRouter()
+
+router.register(r'exams', ExamGenericAPIView)
 
 
 urlpatterns = [
+    path('user/<int:pk>/exams', AddStudentExamAPIView.as_view()),
+    
     path('register', RegisterAPIView.as_view()),
     path('login', LoginAPIView.as_view()),
     path('user', UserDetailAPIView.as_view()),
@@ -18,5 +25,6 @@ urlpatterns = [
     path('user/info', UserInfoUpdateAPIView.as_view()),
     path('user/password', UserPasswordUpdateAPIView.as_view()),
     
-    path('exams', ExamGenericAPIView.as_view()),
-]
+] + router.urls
+
+

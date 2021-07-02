@@ -18,7 +18,7 @@ def upload_image(instance, filename):
 class Exam(models.Model):
     '''Database model for examination'''
     
-    title = models.CharField(max_length=255)
+    title = models.CharField(unique=True, max_length=255)
     is_available = models.BooleanField(default=False)
     duration = models.PositiveIntegerField('Time in seconds', default=60)
     instructions = models.TextField(default=' ')

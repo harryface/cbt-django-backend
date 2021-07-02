@@ -1,31 +1,33 @@
-from rest_framework import generics, mixins
+from rest_framework import exceptions, response, status, views, viewsets
 from rest_framework.permissions import IsAuthenticated
-from django.core.cache import cache
 
 from cbt.authentication import JWTAuthentication
+from account.models import CustomUser
 from core.models import Exam
-from core.serializers import ExamSerializerwithQuestions
+from core.serializers import ExamSerializerwithQuestions, UserSerializer
 
 
-class ExamGenericAPIView(
-    generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.ListModelMixin, mixins.CreateModelMixin,
-    mixins.UpdateModelMixin, mixins.DestroyModelMixin
-):
+class ExamGenericAPIView(viewsets.ModelViewSet):
+    
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = Exam.objects.all()
     serializer_class = ExamSerializerwithQuestions
-
-    def get(self, request, pk=None):
-        if pk:
-            return self.retrieve(request, pk)
-        return self.list(request)
-
-    def post(self, request):
-        return self.create(request)
-
-    def put(self, request, pk=None):
-        return self.partial_update(request, pk)
-
-    def delete(self, request, pk=None):
-        return self.destroy(request, pk)
+    
+    
+class AddStudentExamAPIView(views.APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+    def put(self, request, pk):
+        user = CustomUser.objects.filter(pk=pk).first()
+        if user:
+            if user.is_examiner:
+                raise exceptions.APIException('You cannot assign exams to an examiner!')
+            serializer = UserSerializer(user, data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return response.Response(serializer.data)
+            return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return response.Response({"error" : "student does not exist"}, status=status.HTTP_404_NOT_FOUND)
+    
