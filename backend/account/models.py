@@ -1,9 +1,6 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.db.models.signals import post_save, pre_save
-
-from core.models import Exam
 
 
 class CustomUserManager(BaseUserManager):
@@ -43,18 +40,14 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractUser):
     '''Assign UserModelManager as the default object manager.'''
-    
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email = models.CharField(max_length=255, unique=True)
     password = models.CharField(max_length=255)
     is_examiner = models.BooleanField(default=True)
-    exam = models.ManyToManyField(Exam, through='Result', related_name='registered_exams')
     username = None
-
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
-
     objects = CustomUserManager()
 
     @property
