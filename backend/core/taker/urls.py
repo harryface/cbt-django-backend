@@ -1,9 +1,13 @@
 from django.urls import path
 
-from .views import (
+from account.views import (
     RegisterAPIView, LoginAPIView, UserDetailAPIView, LogoutAPIView,
     UserInfoUpdateAPIView, UserPasswordUpdateAPIView
 )
+
+# from .views import (
+#     ExamGenericAPIView
+# )
 
 
 urlpatterns = [
@@ -13,4 +17,6 @@ urlpatterns = [
     path('logout', LogoutAPIView.as_view()),
     path('user/info', UserInfoUpdateAPIView.as_view()),
     path('user/password', UserPasswordUpdateAPIView.as_view()),
+    
+    # path('exams', ExamGenericAPIView.as_view()),
 ]
