@@ -1,22 +1,22 @@
 from rest_framework import serializers
 
 from account.models import CustomUser
-from core.models import Exam, Question, Result, Answer
+from core.models import Exam, Question
 
 
 class QuestionSerializer(serializers.ModelSerializer):
     '''Question serializer, permits all functions'''
-    
+
     id = serializers.IntegerField(required=False)
 
     class Meta:
         model = Question
-        exclude = ['exam',]
+        exclude = ['exam', ]
         read_only_fields = ['created_at', 'updated_at']
 
     """
     exam_image_url = serializers.SerializerMethodField()
-    
+
     def get_exam_image_url(self, question):
         request = self.context.get('request')
         if question.exam_image and hasattr(question.exam_image, 'url'):
@@ -25,30 +25,6 @@ class QuestionSerializer(serializers.ModelSerializer):
         else:
             return None
     """
-    
-
-class TakerQuestionSerializer(serializers.ModelSerializer):
-    '''The taker can read all but can only write the answer'''
-
-    exam_image_url = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Question
-        fields = ['question', 'option1', 'option2', 'option3',
-                  'option4', 'option5', 'get_exam_image_url', 'answer']
-        read_only_fields = ['question', 'option1', 'option2', 'option3',
-                            'option4', 'option5', 'get_exam_image_url']
-        extra_kwargs = {
-            'answer': {'write_only': True}
-        }
-
-    def get_exam_image_url(self, question):
-        request = self.context.get('request')
-        if question.exam_image and hasattr(question.exam_image, 'url'):
-            photo_url = question.exam_image.url
-            return request.build_absolute_uri(photo_url)
-        else:
-            return None
 
 
 class ExamSerializerwithQuestions(serializers.ModelSerializer):
@@ -61,7 +37,8 @@ class ExamSerializerwithQuestions(serializers.ModelSerializer):
 
     class Meta:
         model = Exam
-        fields = ['id', 'title', 'instructions', 'duration', 'is_available', 'questions']
+        fields = ['id', 'title', 'instructions',
+                  'duration', 'is_available', 'questions']
         read_only_fields = ['created_at', 'updated_at']
 
     def create(self, validated_data):
@@ -69,13 +46,13 @@ class ExamSerializerwithQuestions(serializers.ModelSerializer):
         exam = Exam.objects.create(**validated_data)
         if questions_data:
             Question.objects.bulk_create(
-              [
-                 Question(exam=exam, **question)
-                 for question in questions_data
-              ],
+                [
+                    Question(exam=exam, **question)
+                    for question in questions_data
+                ],
             )
         return exam
-    
+
     def update(self, instance, validated_data):
 
         questions = validated_data.pop('questions')
@@ -99,62 +76,36 @@ class ExamSerializerwithQuestions(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 
-class ExamSerializer(serializers.ModelSerializer):
-    '''can only write the answer'''
-    
-    id = serializers.IntegerField(required=False)
+class RegisterStudentsSerializer(serializers.ModelSerializer):
+    '''For registering students for an exam'''
+
+    students = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=CustomUser.objects.filter(is_examiner=False))
 
     class Meta:
         model = Exam
-        fields = ['id', 'title', 'instructions', 'duration', 'is_available', 'questions']
-        read_only_fields = ['title', 'instructions', 'duration', 'is_available', 'questions']
-        
-        
-class UserSerializer(serializers.ModelSerializer):
-    '''Read only User serializer'''
-    exam = serializers.PrimaryKeyRelatedField(many=True, queryset=Exam.objects.filter(is_available=True))
+        fields = [
+            'id', 'title', 'instructions',
+            'duration', 'is_available', 'students']
+        read_only_fields = [
+            'title', 'instructions', 'duration', 'is_available']
 
-    class Meta:
-        model = CustomUser
-        fields = ['id', 'first_name', 'last_name', 'email', 'exam']
-        read_only_fields = ['id', 'first_name', 'last_name', 'email',]
-        
     def update(self, instance, validated_data):
 
-        exams = validated_data.pop('exam')
-        instance.exam.set(exams)
+        students = validated_data.pop('students')
+        instance.students.set(students)
         instance.save()
 
         return instance
 
 
-class ResultSerializer(serializers.ModelSerializer):
-    '''For viewing results'''
+class UserSerializer(serializers.ModelSerializer):
+    '''Read only User serializer'''
 
-    taker = UserSerializer()
-    exam = ExamSerializer()
-
-    class Meta:
-        model = Result
-        fields = '__all__'
-        read_only_fields = '__all__'
-
-
-class AnswerSerializer(serializers.ModelSerializer):
-    taker = UserSerializer()
-    exam = ExamSerializer()
-    question = QuestionSerializer()
+    id = serializers.IntegerField(required=False)
 
     class Meta:
-        model = Answer
-        fields = {'taker_choice'}
+        model = CustomUser
+        fields = ['id', 'first_name', 'last_name', 'email']
+        read_only_fields = ['first_name', 'last_name', 'email', ]
 
-
-class TakerAnswerSerialiszer(serializers.Serializer):
-    taker_id = serializers.IntegerField()
-    exam_id = serializers.IntegerField()
-    question_id = serializers.IntegerField()
-    taker_choice = serializers.CharField(max_length=200)
-
-    def create(self, validated_data):
-        return Answer(**validated_data)

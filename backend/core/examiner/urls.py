@@ -7,7 +7,7 @@ from account.views import (
 )
 
 from .views import (
-    ExamGenericAPIView, AddStudentExamAPIView
+    ExamGenericAPIView, RegisterStudentsAPIView
 )
 
 router = routers.DefaultRouter()
@@ -16,7 +16,7 @@ router.register(r'exams', ExamGenericAPIView)
 
 
 urlpatterns = [
-    path('user/<int:pk>/exams', AddStudentExamAPIView.as_view()),
+    path('user/<int:pk>/exams', RegisterStudentsAPIView.as_view()),
     
     path('register', RegisterAPIView.as_view()),
     path('login', LoginAPIView.as_view()),
