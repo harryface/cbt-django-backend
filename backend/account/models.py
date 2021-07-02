@@ -49,7 +49,7 @@ class CustomUser(AbstractUser):
     email = models.CharField(max_length=255, unique=True)
     password = models.CharField(max_length=255)
     is_examiner = models.BooleanField(default=True)
-    exam = models.ManyToManyField(Exam, related_name='registered_exams')
+    exam = models.ManyToManyField(Exam, through='Result', related_name='registered_exams')
     username = None
 
     USERNAME_FIELD = 'email'
