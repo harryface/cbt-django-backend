@@ -19,7 +19,7 @@ class Exam(models.Model):
     instructions = models.TextField(default=' ')
     students = models.ManyToManyField(
                     settings.AUTH_USER_MODEL, through='Result',
-                    related_name='registered_students')
+                    related_name='exams')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

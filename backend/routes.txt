@@ -11,15 +11,15 @@ api/account/user/password
 
 ##Examiner##
 
-api/core/exams                          \\ CRUD exams and questions     ALL
-api/core/register/<int:user_pk>/exams  \\ register students for exams  POST
-api/core/<int: user_pk>/exams           \\ view exams(answers and result inclusive) taken by student    GET
-api/core/<int: user_pk>/results         \\ view students result     GET
-api/core/<int: exam_pk>/results         \\ view all the result(with takers) for a particular exam   GET
+api/examiner/exams                          \\ CRUD exams and questions     ALL
+api/examiner/all/students               \\ list all students    GET
+api/examiner/register/<int:user_pk>/exams  \\ register students for exams  POST
+api/examiner/<int: user_pk>/exams           \\ view exams(answers and result inclusive) taken by student    GET
+api/examiner/<int: user_pk>/results         \\ view students result     GET
+api/examiner/<int: exam_pk>/results         \\ view all the result(with takers) for a particular exam   GET
 
 ##Taker##
-(, , )
-api/core/<int: exam_pk>/exam            \\ view all eligible exam   GET
-api/core/<int: user_pk>/exams           \\ View one exam and all questions  GET
-api/core/<int: user_pk>/results         \\ view all available result    GET
+api/taker/<int: exam_pk>/exam            \\ view all eligible exam   GET
+api/taker/<int: user_pk>/exams           \\ View one exam and all questions  GET
+api/taker/<int: user_pk>/results         \\ view all available result    GET
 

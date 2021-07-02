@@ -1,13 +1,24 @@
 from rest_framework import serializers
 
 from account.models import CustomUser
-from core.models import Exam, Question
+from core.models import Answer, Exam, Question
+
+
+class AnswerSerializer(serializers.ModelSerializer):
+    '''Answer serializer, for viewing'''
+
+    id = serializers.IntegerField(required=False)
+
+    class Meta:
+        model = Answer
+        fields = ['taker_choice', 'is_correct']
 
 
 class QuestionSerializer(serializers.ModelSerializer):
     '''Question serializer, permits all functions'''
 
     id = serializers.IntegerField(required=False)
+    answers = AnswerSerializer(many=True)
 
     class Meta:
         model = Question
@@ -109,3 +120,12 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'first_name', 'last_name', 'email']
         read_only_fields = ['first_name', 'last_name', 'email', ]
 
+
+class UserExamsSerializer(serializers.ModelSerializer):
+
+    exams = ExamSerializerwithQuestions(many=True)
+
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'first_name', 'last_name', 'email', 'exams']
+        read_only_fields = ['first_name', 'last_name', 'email', ]
