@@ -5,12 +5,16 @@ from account.views import (
     UserInfoUpdateAPIView, UserPasswordUpdateAPIView
 )
 
-# from .views import (
-#     ExamGenericAPIView
-# )
+from .views import (
+    ExamsListAPIView, ExamGetAPIView, ResultsListAPIView
+)
 
 
 urlpatterns = [
+    path('exams', ExamsListAPIView.as_view()),
+    path('exam/<int:pk>', ExamGetAPIView.as_view()),
+    path('results', ResultsListAPIView.as_view()),
+
     path('register', RegisterAPIView.as_view()),
     path('login', LoginAPIView.as_view()),
     path('user', UserDetailAPIView.as_view()),

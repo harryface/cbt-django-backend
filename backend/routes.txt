@@ -16,7 +16,7 @@ api/examiner/all/students               \\ list all students    GET
 api/examiner/register/<int:user_pk>/exams  \\ register students for exams  POST
 api/examiner/<int: user_pk>/exams           \\ view exams(answers and result inclusive) taken by student    GET
 api/examiner/<int: user_pk>/results         \\ view students result     GET
-api/examiner/<int: exam_pk>/results         \\ view all the result(with takers) for a particular exam   GET
+api/examiner/<int: exam_pk>/results         \\ view all the result for a particular exam   GET
 
 ##Taker##
 api/taker/<int: exam_pk>/exam            \\ view all eligible exam   GET

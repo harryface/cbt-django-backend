@@ -4,9 +4,9 @@ from rest_framework.permissions import IsAuthenticated
 from cbt.authentication import JWTAuthentication
 from account.models import CustomUser
 from core.models import Exam
-from core.serializers import (
+from .serializers import (
     ExamSerializerwithQuestions, RegisterStudentsSerializer,
-    UserSerializer, UserExamsSerializer
+    UserSerializer, UserExamsSerializer, ExamResultsSerializer
     )
 
 
@@ -65,3 +65,18 @@ class GetStudentExamAPIView(views.APIView):
             return response.Response(serializer.data)
         return response.Response(
             {"error": "Student not found"}, status=status.HTTP_404_NOT_FOUND)
+
+
+class ExamResultsAPIView(views.APIView):
+    '''List all exam/question/answer of student'''
+
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk=None):
+        exam = Exam.objects.filter(pk=pk).first()
+        if exam:
+            serializer = ExamResultsSerializer(exam)
+            return response.Response(serializer.data)
+        return response.Response(
+            {"error": "Exam not found"}, status=status.HTTP_404_NOT_FOUND)
