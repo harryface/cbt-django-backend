@@ -5,78 +5,61 @@ from cbt.authentication import JWTAuthentication
 from account.models import CustomUser
 from core.models import Exam
 from .serializers import (
-    ExamSerializerwithQuestions, RegisterStudentsSerializer,
-    UserSerializer, UserExamsSerializer, ExamResultsSerializer
-    )
+    ExamResultSerializer, ExamStudentSerializer,
+    ExamWithQuestionsSerializer,
+    StudentExamResultSerializer
+)
 
 
 class ExamGenericAPIView(viewsets.ModelViewSet):
+    '''
+    Get exam with all the question registered to it,
+    update the questions list too, deleting too
+    '''
 
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = Exam.objects.all()
-    serializer_class = ExamSerializerwithQuestions
+    serializer_class = ExamWithQuestionsSerializer
 
 
-class ListStudentsAPIView(views.APIView):
-    '''List all available students to the examiner'''
-
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        students = CustomUser.objects.filter(is_examiner=False)
-        if students:
-            serializer = UserSerializer(students)
-            return response.Response(serializer.data)
-        return response.Response(
-            {"error": "No Student Found"}, status=status.HTTP_404_NOT_FOUND)
-
-
-class RegisterStudentsAPIView(views.APIView):
-    '''For registering students for exams'''
+class ExamStudentsGenericAPIView(viewsets.ModelViewSet):
+    '''
+    Get exam with all the students registered for it,
+    update the students list too, deleting too
+    '''
 
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
-
-    def put(self, request, pk):
-        exam = Exam.objects.filter(pk=pk).first()
-        if exam:
-            serializer = RegisterStudentsSerializer(exam, data=request.data)
-            if serializer.is_valid(raise_exception=True):
-                serializer.save()
-                return response.Response(serializer.data)
-            return response.Response(
-                serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        return response.Response(
-            {"error": "Exam does not exist"}, status=status.HTTP_404_NOT_FOUND)
+    queryset = Exam.objects.all()
+    serializer_class = ExamStudentSerializer
 
 
-class GetStudentExamAPIView(views.APIView):
-    '''List all exam/question/answer of student'''
+class ExamResultAPIView(views.APIView):
+    '''Get an exam with all the results associated'''
 
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk=None):
-        student = CustomUser.objects.filter(pk=pk).first()
-        if student:
-            serializer = UserExamsSerializer(student)
-            return response.Response(serializer.data)
-        return response.Response(
-            {"error": "Student not found"}, status=status.HTTP_404_NOT_FOUND)
-
-
-class ExamResultsAPIView(views.APIView):
-    '''List all exam/question/answer of student'''
-
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, pk=None):
-        exam = Exam.objects.filter(pk=pk).first()
-        if exam:
-            serializer = ExamResultsSerializer(exam)
+        exams = Exam.objects.filter(pk=pk, is_available=True)
+        if exams:
+            serializer = ExamResultSerializer(exams)
             return response.Response(serializer.data)
         return response.Response(
             {"error": "Exam not found"}, status=status.HTTP_404_NOT_FOUND)
+
+
+class StudentExamResultAPIView(views.APIView):
+    '''Get a student with exam and result populated'''
+
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk=None):
+        student = CustomUser.objects.filter(pk=pk, is_available=True)
+        if student:
+            serializer = StudentExamResultSerializer(student)
+            return response.Response(serializer.data)
+        return response.Response(
+            {"error": "Student not found"}, status=status.HTTP_404_NOT_FOUND)

@@ -9,15 +9,18 @@ from account.views import (
 from .views import (
     ExamGenericAPIView, RegisterStudentsAPIView,
     ListStudentsAPIView, GetStudentExamAPIView,
-    ExamResultsAPIView
+    ExamResultsAPIView, AnswerGenericAPIView
 )
 
 router = routers.DefaultRouter()
 
 router.register(r'exams', ExamGenericAPIView)
+router.register(r'answers', AnswerGenericAPIView)
 
 
 urlpatterns = [
+    #path('foo/order/', OrderViewSet.as_view({'post': 'create'})),
+    #path('foo/order/<int:pk>/', OrderViewSet.as_view({'patch': 'partial_update'})),
     path('exam/<int:pk>/students', RegisterStudentsAPIView.as_view()),
     path('student/<int:pk>/perfomance', GetStudentExamAPIView.as_view()),
     path('all/students', ListStudentsAPIView.as_view()),

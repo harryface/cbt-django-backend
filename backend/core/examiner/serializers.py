@@ -1,38 +1,7 @@
 from rest_framework import serializers
 
 from account.models import CustomUser
-from core.models import Answer, Exam, Question, Result
-
-
-class ResultSerializer(serializers.ModelSerializer):
-    '''Answer serializer, for viewing'''
-
-    id = serializers.IntegerField(required=False)
-
-    class Meta:
-        model = Result
-        exclude = ['taker', 'exam']
-
-
-class AnswerSerializer(serializers.ModelSerializer):
-    '''Answer serializer, for viewing'''
-
-    id = serializers.IntegerField(required=False)
-
-    class Meta:
-        model = Answer
-        fields = ['taker_choice', 'is_correct']
-
-
-class QuestionAnswerSerializer(serializers.ModelSerializer):
-    '''Question serializer, permits all functions'''
-
-    answers = AnswerSerializer(many=True)
-
-    class Meta:
-        model = Question
-        exclude = ['exam', ]
-        read_only_fields = ['created_at', 'updated_at']
+from core.models import Exam, Question, Result
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -45,33 +14,21 @@ class QuestionSerializer(serializers.ModelSerializer):
         exclude = ['exam', ]
         read_only_fields = ['created_at', 'updated_at']
 
-    """
-    exam_image_url = serializers.SerializerMethodField()
 
-    def get_exam_image_url(self, question):
-        request = self.context.get('request')
-        if question.exam_image and hasattr(question.exam_image, 'url'):
-            photo_url = question.exam_image.url
-            return request.build_absolute_uri(photo_url)
-        else:
-            return None
-    """
-
-
-class ExamSerializerwithQuestions(serializers.ModelSerializer):
+class ExamWithQuestionsSerializer(serializers.ModelSerializer):
     '''
     Allows both creation and update of the exam
     and questions, for the examiner
     '''
 
-    results = ResultSerializer()
     questions = QuestionSerializer(many=True)
 
     class Meta:
         model = Exam
         fields = ['id', 'title', 'instructions',
-                  'duration', 'is_available', 'questions', 'results']
+                  'duration', 'is_available', 'questions']
         read_only_fields = ['result', 'created_at', 'updated_at']
+        # depth = 1
 
     def create(self, validated_data):
         questions_data = validated_data.pop('questions', [])
@@ -108,30 +65,7 @@ class ExamSerializerwithQuestions(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 
-class RegisterStudentsSerializer(serializers.ModelSerializer):
-    '''For registering students for an exam'''
-
-    students = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=CustomUser.objects.filter(is_examiner=False))
-
-    class Meta:
-        model = Exam
-        fields = [
-            'id', 'title', 'instructions',
-            'duration', 'is_available', 'students']
-        read_only_fields = [
-            'title', 'instructions', 'duration', 'is_available']
-
-    def update(self, instance, validated_data):
-
-        students = validated_data.pop('students')
-        instance.students.set(students)
-        instance.save()
-
-        return instance
-
-
-class UserSerializer(serializers.ModelSerializer):
+class StudentSerializer(serializers.ModelSerializer):
     '''Read only User serializer'''
 
     id = serializers.IntegerField(required=False)
@@ -142,25 +76,87 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ['first_name', 'last_name', 'email', ]
 
 
-class UserExamsSerializer(serializers.ModelSerializer):
-
-    exams = ExamSerializerwithQuestions(many=True)
-
-    class Meta:
-        model = CustomUser
-        fields = ['id', 'first_name', 'last_name', 'email', 'exams']
-        read_only_fields = ['first_name', 'last_name', 'email', ]
-
-
-class ExamResultsSerializer(serializers.ModelSerializer):
+class ExamStudentSerializer(serializers.ModelSerializer):
     '''
-    For getting the list of results in an exam
+    Allows both creation and update of the exam
+    and questions, for the examiner
     '''
 
-    questions = QuestionAnswerSerializer(many=True)
+    students = StudentSerializer(many=True)
 
     class Meta:
         model = Exam
         fields = ['id', 'title', 'instructions',
-                  'duration', 'is_available', 'questions', 'result']
+                  'duration', 'is_available', 'students']
+        read_only_fields = ['id', 'title', 'instructions',
+                            'duration', 'is_available']
+
+    """
+    def get_or_create_students(self, students):
+        student_ids = []
+        for student in students:
+            student_instance, created = CustomUser.objects.get_or_create(pk=student.get('id'), defaults=student)
+            student_ids.append(student_instance.pk)
+        return student_ids
+
+    def create_or_update_packages(self, students):
+        student_ids = []
+        for student in students:
+            package_instance, created = CustomUser.objects.update_or_create(pk=student.get('id'), defaults=student)
+            student_ids.append(package_instance.pk)
+        return student_ids
+
+    def create(self, validated_data):
+        students = validated_data.pop('students', [])
+        exam = Exam.objects.create(**validated_data)
+        exam.students.set(self.get_or_create_packages(students))
+        return exam
+    """
+
+    def update(self, instance, validated_data):
+        students = validated_data.pop('students', [])
+        instance.students.set(self.create_or_update_packages(students))
+        """
+        # Core model fields
+        fields = ['order_id', 'is_cod']
+        for field in fields:
+            try:
+                setattr(instance, field, validated_data[field])
+            except KeyError:  # validated_data may not contain all fields during HTTP PATCH
+                pass
+        """
+        instance.save()
+        return instance
+
+
+class ExamResultSerializer(serializers.ModelSerializer):
+    '''
+    Allows both creation and update of the exam
+    and questions, for the examiner
+    '''
+
+    class Meta:
+        model = Exam
+        fields = ['id', 'title', 'instructions',
+                  'duration', 'is_available', 'results']
         read_only_fields = '__all__'
+        depth = 1
+
+
+class ResultSerializer(serializers.ModelSerializer):
+    '''Just for displaying result with the exam ID'''
+
+    class Meta:
+        model = Result
+        exclude = ['taker', ]
+
+
+class StudentExamResultSerializer(serializers.ModelSerializer):
+    '''Displays Student, Result, exam'''
+
+    result = ResultSerializer(many=True)
+
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'first_name', 'last_name', 'email', 'result']
+        read_only_fields = ['first_name', 'last_name', 'email', ]
