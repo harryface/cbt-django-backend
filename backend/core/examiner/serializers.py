@@ -1,7 +1,8 @@
 from rest_framework import serializers
 
-from account.models import CustomUser
+from account.models import CustomUser as Student
 from core.models import Exam, Question, Result
+from core.utils import NestedUpdateCreate
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -28,40 +29,19 @@ class ExamWithQuestionsSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'instructions',
                   'duration', 'is_available', 'questions']
         read_only_fields = ['result', 'created_at', 'updated_at']
-        # depth = 1
 
     def create(self, validated_data):
-        questions_data = validated_data.pop('questions', [])
-        exam = Exam.objects.create(**validated_data)
-        if questions_data:
-            Question.objects.bulk_create(
-                [
-                    Question(exam=exam, **question)
-                    for question in questions_data
-                ],
-            )
-        return exam
+        d = NestedUpdateCreate(Exam, Question, 'questions')
+        d.create(validated_data)
+        return d
 
     def update(self, instance, validated_data):
-
-        questions = validated_data.pop('questions')
-
-        for question in questions:
-            question_id = question.get('id', None)
-            if question_id:
-                que = Question.objects.get(id=question_id, exam=instance)
-                que.question = question.get('name', que.question)
-                que.exam_image = question.get('exam_image', que.exam_image)
-                que.option1 = question.get('option1', que.option1)
-                que.option2 = question.get('option2', que.option2)
-                que.option3 = question.get('option3', que.option3)
-                que.option4 = question.get('option4', que.option4)
-                que.option5 = question.get('option5', que.option5)
-                que.answer = question.get('answer', que.answer)
-                que.save()
-            else:
-                Question.objects.create(exam=instance, **question)
-
+        d = NestedUpdateCreate(Exam, Question, 'questions')
+        d.update(
+            instance, validated_data,
+            fields=['title', 'instructions',
+                  'duration', 'is_available'])
+        
         return super().update(instance, validated_data)
 
 
@@ -71,7 +51,7 @@ class StudentSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
 
     class Meta:
-        model = CustomUser
+        model = Student
         fields = ['id', 'first_name', 'last_name', 'email']
         read_only_fields = ['first_name', 'last_name', 'email', ]
 
@@ -91,42 +71,15 @@ class ExamStudentSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'title', 'instructions',
                             'duration', 'is_available']
 
-    """
-    def get_or_create_students(self, students):
-        student_ids = []
-        for student in students:
-            student_instance, created = CustomUser.objects.get_or_create(pk=student.get('id'), defaults=student)
-            student_ids.append(student_instance.pk)
-        return student_ids
-
-    def create_or_update_packages(self, students):
-        student_ids = []
-        for student in students:
-            package_instance, created = CustomUser.objects.update_or_create(pk=student.get('id'), defaults=student)
-            student_ids.append(package_instance.pk)
-        return student_ids
-
     def create(self, validated_data):
-        students = validated_data.pop('students', [])
-        exam = Exam.objects.create(**validated_data)
-        exam.students.set(self.get_or_create_packages(students))
-        return exam
-    """
+        d = NestedUpdateCreate(Exam, Student, 'students')
+        d.create(validated_data)
+        return d
 
     def update(self, instance, validated_data):
-        students = validated_data.pop('students', [])
-        instance.students.set(self.create_or_update_packages(students))
-        """
-        # Core model fields
-        fields = ['order_id', 'is_cod']
-        for field in fields:
-            try:
-                setattr(instance, field, validated_data[field])
-            except KeyError:  # validated_data may not contain all fields during HTTP PATCH
-                pass
-        """
-        instance.save()
-        return instance
+        d = NestedUpdateCreate(Exam, Student, 'students')
+        d.update(instance, validated_data)
+        return super().update(instance, validated_data)
 
 
 class ExamResultSerializer(serializers.ModelSerializer):
@@ -149,6 +102,7 @@ class ResultSerializer(serializers.ModelSerializer):
     class Meta:
         model = Result
         exclude = ['taker', ]
+        read_only_fields = '__all__'
 
 
 class StudentExamResultSerializer(serializers.ModelSerializer):
@@ -157,6 +111,6 @@ class StudentExamResultSerializer(serializers.ModelSerializer):
     result = ResultSerializer(many=True)
 
     class Meta:
-        model = CustomUser
+        model = Student
         fields = ['id', 'first_name', 'last_name', 'email', 'result']
-        read_only_fields = ['first_name', 'last_name', 'email', ]
+        read_only_fields = '__all__'

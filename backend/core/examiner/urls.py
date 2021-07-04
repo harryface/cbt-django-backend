@@ -7,32 +7,30 @@ from account.views import (
 )
 
 from .views import (
-    ExamGenericAPIView, RegisterStudentsAPIView,
-    ListStudentsAPIView, GetStudentExamAPIView,
-    ExamResultsAPIView, AnswerGenericAPIView
+    ExamGenericAPIView, ExamResultAPIView,
+    ExamStudentsGenericAPIView, StudentExamResultAPIView
 )
-
-router = routers.DefaultRouter()
-
-router.register(r'exams', ExamGenericAPIView)
-router.register(r'answers', AnswerGenericAPIView)
 
 
 urlpatterns = [
-    #path('foo/order/', OrderViewSet.as_view({'post': 'create'})),
-    #path('foo/order/<int:pk>/', OrderViewSet.as_view({'patch': 'partial_update'})),
-    path('exam/<int:pk>/students', RegisterStudentsAPIView.as_view()),
-    path('student/<int:pk>/perfomance', GetStudentExamAPIView.as_view()),
-    path('all/students', ListStudentsAPIView.as_view()),
-    path('exam/<int:pk>/results', ExamResultsAPIView.as_view()),
-    
+    path('exams/', ExamGenericAPIView.as_view({'get': 'list'})),
+    path('exam/<int:pk>', ExamGenericAPIView.as_view(
+        {'get': 'retrieve', 'put': 'update', 'post': 'create'})),
+
+    path('student/exams/',
+         ExamStudentsGenericAPIView.as_view({'get': 'list'})),
+    path('students/exam/<int:pk>/',
+         ExamStudentsGenericAPIView.as_view(
+             {'get': 'retrieve', 'patch': 'partial_update'})),
+
+    path('exam/<int:pk>/results', ExamResultAPIView.as_view()),
+    path('student/<int:pk>/perfomance', StudentExamResultAPIView.as_view()),
+
     path('register', RegisterAPIView.as_view()),
     path('login', LoginAPIView.as_view()),
     path('user', UserDetailAPIView.as_view()),
     path('logout', LogoutAPIView.as_view()),
     path('user/info', UserInfoUpdateAPIView.as_view()),
     path('user/password', UserPasswordUpdateAPIView.as_view()),
-    
-] + router.urls
 
-
+]

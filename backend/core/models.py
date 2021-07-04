@@ -35,7 +35,9 @@ def upload_image(instance, filename):
 class Question(models.Model):
     '''Database model for question'''
     exam = models.ForeignKey(
-        Exam, on_delete=models.CASCADE, related_name='questions')
+        Exam, on_delete=models.CASCADE,
+        null=True,
+        related_name='questions')
     exam_image = models.ImageField(
         upload_to=upload_image, null=True, blank=True)
     question = models.TextField(max_length=500)
@@ -59,10 +61,11 @@ class Question(models.Model):
 class Result(models.Model):
     taker = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name='user_results')
     exam = models.ForeignKey(
-        Exam, on_delete=models.CASCADE, related_name='results')
+        Exam, on_delete=models.PROTECT, related_name='results')
+    exam_title = models.CharField(max_length=255)
     attempted = models.IntegerField(default=0)
     not_attempted = models.IntegerField(default=0)
     correct_answers = models.IntegerField(default=0)
@@ -75,6 +78,12 @@ class Result(models.Model):
     @property
     def score(self):
         return (self.correct_answers / (self.attempted + self.not_attempted)) * 100
+
+    def save(self) -> None:
+        if not self.pk:
+            # In case examiner changes exam title after result created
+            self.exam_title = self.exam.title
+        return super().save()
 
 
 class Answer(models.Model):

@@ -3,11 +3,10 @@ from rest_framework.permissions import IsAuthenticated
 
 from cbt.authentication import JWTAuthentication
 from account.models import CustomUser
-from core.models import Exam
+from core.models import Exam, Question
 from .serializers import (
     ExamResultSerializer, ExamStudentSerializer,
-    ExamWithQuestionsSerializer,
-    StudentExamResultSerializer
+    ExamWithQuestionsSerializer, StudentExamResultSerializer
 )
 
 
