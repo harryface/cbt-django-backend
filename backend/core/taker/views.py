@@ -1,19 +1,18 @@
-from rest_framework import response, status, views, viewsets
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import permissions, response, status, views, viewsets
 
 from cbt.authentication import JWTAuthentication
 from core.models import Exam, Result
 from .serializers import (
-    ExamSerializerwithQuestions,
-    ResultSerializer, ExamSerializer
+        ExamSerializerwithQuestions,
+        ResultSerializer, ExamSerializer
     )
 
 
 class ExamsListAPIView(views.APIView):
-    '''List all available students to the examiner'''
+    '''List all available exams the student was registered in'''
 
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         exams = Exam.objects.filter(students=request.user)
@@ -25,9 +24,10 @@ class ExamsListAPIView(views.APIView):
 
 
 class ExamGetAPIView(views.APIView):
+    '''Get a particular exam with all its question'''
 
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, pk=None):
         exam = Exam.objects.filter(pk=pk).first()
@@ -39,15 +39,15 @@ class ExamGetAPIView(views.APIView):
 
 
 class ResultsListAPIView(views.APIView):
-    '''List all exam/question/answer of student'''
+    '''List all students results'''
 
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request, pk=None):
-        result = Result.objects.filter(taker=request.user).first()
+    def get(self, request):
+        result = Result.objects.filter(taker=request.user)
         if result:
-            serializer = ResultSerializer(result)
+            serializer = ResultSerializer(result, many=True)
             return response.Response(serializer.data)
         return response.Response(
-            {"error": "Exam not found"}, status=status.HTTP_404_NOT_FOUND)
+            {"error": "Results not found"}, status=status.HTTP_404_NOT_FOUND)

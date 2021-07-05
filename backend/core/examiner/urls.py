@@ -2,8 +2,9 @@ from rest_framework import routers
 from django.urls import path
 
 from account.views import (
-    RegisterAPIView, LoginAPIView, UserDetailAPIView, LogoutAPIView,
-    UserInfoUpdateAPIView, UserPasswordUpdateAPIView
+    RegisterAPIView, LoginAPIView, UserDetailAPIView,
+    LogoutAPIView, UserInfoUpdateAPIView,
+    UserPasswordUpdateAPIView, UsersDetailAPIView
 )
 
 from .views import (
@@ -21,7 +22,7 @@ urlpatterns = [
          ExamStudentsGenericAPIView.as_view({'get': 'list'})),
     path('students/exam/<int:pk>/',
          ExamStudentsGenericAPIView.as_view(
-             {'get': 'retrieve', 'patch': 'partial_update'})),
+             {'get': 'retrieve', 'put': 'update',})),
 
     path('exam/<int:pk>/results', ExamResultAPIView.as_view()),
     path('student/<int:pk>/perfomance', StudentExamResultAPIView.as_view()),
@@ -32,5 +33,6 @@ urlpatterns = [
     path('logout', LogoutAPIView.as_view()),
     path('user/info', UserInfoUpdateAPIView.as_view()),
     path('user/password', UserPasswordUpdateAPIView.as_view()),
+    path('users', UsersDetailAPIView.as_view()),
 
 ]

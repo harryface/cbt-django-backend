@@ -33,7 +33,7 @@ class NestedUpdateCreate:
         rn.set(self.get_or_create_packages(child_instance))
         return parent_instance
 
-    def update(self, instance, validated_data, fields):
+    def update(self, instance, validated_data):
         child_instance = validated_data.pop(self.related_name, [])
         rn = getattr(instance, self.related_name)
         rn.set(self.create_or_update_packages(child_instance))

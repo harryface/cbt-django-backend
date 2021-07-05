@@ -1,6 +1,4 @@
-from rest_framework import exceptions
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
+from rest_framework import exceptions, permissions, response, status
 from rest_framework.views import APIView
 
 from .models import CustomUser
@@ -10,6 +8,7 @@ from .serializers import UserSerializer
 
 class RegisterAPIView(APIView):
     '''View for registration for both examiner and exam taker'''
+
     def post(self, request):
         data = request.data
 
@@ -21,12 +20,12 @@ class RegisterAPIView(APIView):
         serializer = UserSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data)
+        return response.Response(serializer.data)
 
 
 class LoginAPIView(APIView):
     '''View for logging the examiner or the exam taker in'''
-    
+
     def post(self, request):
         email = request.data['email']
         password = request.data['password']
@@ -46,58 +45,58 @@ class LoginAPIView(APIView):
 
         token = JWTAuthentication.generate_jwt(user.id, scope)
 
-        response = Response()
-        response.set_cookie(key='jwt', value=token, httponly=True)
-        response.data = {
+        response_ = response.Response()
+        response_.set_cookie(key='jwt', value=token, httponly=True)
+        response_.data = {
             'message': 'success'
         }
 
-        return response
+        return response_
 
 
 class LogoutAPIView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, _):
-        response = Response()
-        response.delete_cookie(key='jwt')
-        response.data = {
+        response_ = response.Response()
+        response_.delete_cookie(key='jwt')
+        response_.data = {
             'message': 'success'
         }
-        return response
+        return response_
 
 
 class UserDetailAPIView(APIView):
     '''A view for getting the user data'''
-    
+
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         user = request.user
         data = UserSerializer(user).data
 
-        return Response(data)
+        return response.Response(data)
 
 
 class UserInfoUpdateAPIView(APIView):
     '''A view for getting the user data'''
 
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def put(self, request, pk=None):
         user = request.user
         serializer = UserSerializer(user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data)
+        return response.Response(serializer.data)
 
 
 class UserPasswordUpdateAPIView(APIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def put(self, request, pk=None):
         user = request.user
@@ -108,5 +107,19 @@ class UserPasswordUpdateAPIView(APIView):
 
         user.set_password(data['password'])
         user.save()
-        return Response(UserSerializer(user).data)
+        return response.Response(UserSerializer(user).data)
 
+
+class UsersDetailAPIView(APIView):
+    '''A view for getting all user data'''
+
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, _):
+        user = CustomUser.objects.all()
+        if user:
+            serializer = UserSerializer(user, many=True)
+            return response.Response(serializer.data)
+        return response.Response(
+            {"error": "No user exists"}, status=status.HTTP_404_NOT_FOUND)
