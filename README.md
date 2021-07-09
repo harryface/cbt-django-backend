@@ -9,7 +9,7 @@
 <br />
 <p align="center">
   
-  <h3 align="center">A CBT(RESTful api) app created with Django, consumed with ReactJS</h3>
+  <h3 align="center">A CBT(RESTful api) app created with Django</h3>
   
 </p>
 
@@ -17,16 +17,12 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-A simple computer based test web application that allows owners to create examinations, add questions to it and randomly presents the questions and its answer options to different exam takers.
-It will also have the ability to automatically submit answers after the taker has elapsed their time.
+A simple computer based test web application that allows owners to create examinations, add questions to it and randomly present the questions and its answer options to different exam takers. On the other hand, allows taker to take these exams and also view their results thereafter. The APIs would be consumed with Vue and React and would poses other functionalities.
 
 ### Built With
 
-* [Bootstrap](https://getbootstrap.com)
-* [ReactJS](https://reactjs.org)
 * [Django](https://djangoproject.com)
 * [DjangoRestFramework](https://www.django-rest-framework.org/)
-
 
 
 <!-- GETTING STARTED -->
@@ -38,7 +34,7 @@ We have simple basic steps that can be performed to get us started.
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/harryface/cbt-django-react.git
+   git clone https://github.com/harryface/cbt-django-backend.git
    ```
 2. Create a virtual environment on your local system
    ```sh
@@ -59,13 +55,6 @@ We have simple basic steps that can be performed to get us started.
    ```sh
    python manage.py runserver
    ```
-
-
-### Installation (Frontend)
-
-`coming soon`
-
-
 
 <!-- ENDPOINT EXAMPLES -->
 ## Endpoints
@@ -99,7 +88,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 Harry Ilonze - harryilonze@yahoo.com
 
-Project Link: [https://github.com/harryface/cbt-django-react](https://github.com/harryface/cbt-django-react)
+Project Link: [https://github.com/harryface/cbt-django-backend](https://github.com/harryface/cbt-django-backend)
 
 
 
@@ -117,11 +106,11 @@ Project Link: [https://github.com/harryface/cbt-django-react](https://github.com
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[forks-shield]: https://img.shields.io/github/forks/harryface/cbt-django-react.svg?style=for-the-badge
-[forks-url]: https://github.com/harryface/cbt-django-react/network/members
-[stars-shield]: https://img.shields.io/github/stars/harryface/cbt-django-react.svg?style=for-the-badge
-[stars-url]: https://github.com/harryface/cbt-django-react/stargazers
-[issues-shield]: https://img.shields.io/github/issues/harryface/cbt-django-react.svg?style=for-the-badge
-[issues-url]: https://github.com/harryface/cbt-django-react/issues
-[license-shield]: https://img.shields.io/github/license/harryface/cbt-django-react.svg?style=for-the-badge
-[license-url]: https://github.com/harryface/cbt-django-react/blob/master/LICENSE.txt
+[forks-shield]: https://img.shields.io/github/forks/harryface/cbt-django-backend.svg?style=for-the-badge
+[forks-url]: https://github.com/harryface/cbt-django-backend/network/members
+[stars-shield]: https://img.shields.io/github/stars/harryface/cbt-django-backend.svg?style=for-the-badge
+[stars-url]: https://github.com/harryface/cbt-django-backend/stargazers
+[issues-shield]: https://img.shields.io/github/issues/harryface/cbt-django-backend.svg?style=for-the-badge
+[issues-url]: https://github.com/harryface/cbt-django-backend/issues
+[license-shield]: https://img.shields.io/github/license/harryface/cbt-django-backend.svg?style=for-the-badge
+[license-url]: https://github.com/harryface/cbt-django-backend/blob/master/LICENSE.txt
