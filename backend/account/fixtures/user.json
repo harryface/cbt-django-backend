@@ -1,0 +1,22 @@
+[
+  {
+    "model": "account.customuser",
+    "pk": 5,
+    "fields": {
+      "first_name": "John",
+      "last_name": "Lennon",
+      "email": "student1@yahoo.com",
+      "role": "student"
+    }
+  },
+  {
+    "model": "account.customuser",
+    "pk": 6,
+    "fields": {
+      "first_name": "Paul",
+      "last_name": "McCartney",
+      "email": "examiner1@yahoo.com",
+      "role": "examiner"
+    }
+  }
+]

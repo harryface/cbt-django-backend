@@ -14,9 +14,9 @@ class CustomUserManager(BaseUserManager):
             email=self.normalize_email(email)
         )
         user.set_password(password)
-        user.is_admin = False
+        user.is_active = False
         user.is_staff = False
-        user.is_examiner = False
+        user.role = "student"
         user.save(using=self._db)
         return user
 
@@ -30,21 +30,24 @@ class CustomUserManager(BaseUserManager):
             email=self.normalize_email(email)
         )
         user.set_password(password)
-        user.is_admin = True
-        user.is_examiner = True
-        user.is_staff = True
-        user.is_superuser = True
+        user.is_active = True
+        user.is_staff = False
+        user.role = "examiner"
         user.save(using=self._db)
         return user
 
 
 class CustomUser(AbstractUser):
-    '''Assign UserModelManager as the default object manager.'''
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    email = models.CharField(max_length=255, unique=True)
-    password = models.CharField(max_length=255)
-    is_examiner = models.BooleanField(default=True)
+    """Create customuser and
+    assign UserModelManager as the default object manager."""
+
+    ROLE_CHOICES = (("teacher", "teacher"), ("student", "student"))
+
+    username = None
+    email = models.EmailField(unique=True)
+    role = models.CharField(max_length=10,
+                            choices=ROLE_CHOICES, default="student")
+
     username = None
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
