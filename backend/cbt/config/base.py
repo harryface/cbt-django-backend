@@ -1,6 +1,10 @@
 import os
 from django.utils.timezone import timedelta
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -10,12 +14,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = str(os.getenv('SECRET_KEY'))
+SECRET_KEY = str(os.getenv('SECRET_KEY', 'secret'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.getenv('DEBUG'))
+DEBUG = bool(os.getenv('DEBUG', True))
 
-ALLOWED_HOSTS = list(os.getenv('ALLOWED_HOSTS'))
+ALLOWED_HOSTS = list(os.getenv('ALLOWED_HOSTS', '*'))
 
 
 # Application definition
@@ -48,7 +52,7 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=90)
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=2)
 }
 
 MIDDLEWARE = [
@@ -64,7 +68,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'roxx.urls'
+ROOT_URLCONF = 'cbt.urls'
 
 TEMPLATES = [
     {
@@ -82,7 +86,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'roxx.wsgi.application'
+WSGI_APPLICATION = 'cbt.wsgi.application'
 
 
 DATABASES = {
@@ -129,8 +133,6 @@ AUTH_USER_MODEL = 'account.CustomUser'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [os.getenv('CORS_ALLOWED_ORIGINS'),]
-CORS_ALLOWED_ORIGIN_REGEXES = [os.getenv('CORS_ALLOWED_ORIGIN_REGEXES'),]
-CORS_ORIGIN_WHITELIST = [os.getenv('CORS_ORIGIN_WHITELIST'),]
 CORS_ALLOW_CREDENTIALS = bool(os.getenv('CORS_ALLOW_CREDENTIALS'))
 
 SPECTACULAR_SETTINGS = {

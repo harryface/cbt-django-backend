@@ -8,8 +8,6 @@ from rest_framework import serializers
 from account.models.reset_password import ResetPasswordRequest
 
 from account.models.user import CustomUser
-from account.tasks.password_reset_email import send_password_reset_email
-from account.tasks.password_reset_request import expire_the_password_reset_request
 
 
 valid_password_pattern = re.compile(
@@ -29,16 +27,8 @@ class ResetPasswordSerializer(serializers.Serializer):
             return
         user = CustomUser.objects.get(email=email.lower())
         instance = ResetPasswordRequest.objects.create(user=user)
-            
-        try:
-            send_password_reset_email.delay(instance.pk)
-            expire_the_password_reset_request.apply_async(
-                args=[instance.pk], eta=timezone.now(
-                ) + timezone.timedelta(minutes=30)
-            )            
-        except Exception as e:
-            # logger.error(e)
-            print(e)
+        # send email to user
+        user.send_email()
         return
 
 

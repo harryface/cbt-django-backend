@@ -1,0 +1,79 @@
+[
+  {
+    "model": "core.exam",
+    "pk": 1,
+    "fields": {
+      "title": "First Exam",
+      "duration": 30,
+      "instructions": "This is the first exam instruction",
+      "created_at": "2022-06-01T13:20:30+03:00",
+      "updated_at": "2022-06-01T13:20:30+03:00"
+    }
+  },{
+    "model": "core.exam",
+    "pk": 2,
+    "fields": {
+      "title": "Second Exam",
+      "duration": 30,
+      "instructions": "This is the second exam instructions",
+      "created_at": "2022-06-01T13:20:30+03:00",
+      "updated_at": "2022-06-01T13:20:30+03:00"
+    }
+  },
+  {
+    "model": "core.question",
+    "pk": 1,
+    "fields": {
+      "exam_id": 1,
+      "question": "Whats your favourite number?",
+      "option_1": "20",
+      "option_2": "25",
+      "option_3": "30",
+      "option_4": "35",
+      "option_5": "40",
+      "answer": "20"
+    }
+  },
+  {
+    "model": "core.question",
+    "pk": 2,
+    "fields": {
+      "exam_id": 1,
+      "question": "When was Nigeria's independence?",
+      "option_1": "2000",
+      "option_2": "1967",
+      "option_3": "1955",
+      "option_4": "1820",
+      "option_5": "1990",
+      "answer": "1967"
+    }
+  },
+  {
+    "model": "core.question",
+    "pk": 3,
+    "fields": {
+      "exam_id": 1,
+      "question": "What state was Ugochukwu born?",
+      "option_1": "Anambra",
+      "option_2": "Lagos",
+      "option_3": "Yola",
+      "option_4": "Abuja",
+      "option_5": "Rivers",
+      "answer": "Anambra"
+    }
+  },
+  {
+    "model": "core.question",
+    "pk": 4,
+    "fields": {
+      "exam_id": 1,
+      "question": "Who is a singer?",
+      "option_1": "Ghandi",
+      "option_2": "Obama Barrack",
+      "option_3": "Azul Ahmed",
+      "option_4": "Sunny Bobo",
+      "option_5": "Okon",
+      "answer": "Sunny Bobo"
+    }
+  }
+]

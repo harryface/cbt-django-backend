@@ -40,18 +40,22 @@ We have simple basic steps that can be performed to get us started.
    ```sh
    python -m venv <path/to/virtual environment>
    ```
-3. Install all dependencies in `requirements.txt`
+3. Activate the virtual environment on your local system
+   ```sh
+   source <path/to/virtual environment>/bin/activate
+   ```
+4. Install all dependencies in `requirements.txt`
    ```sh
    pip install -r requiremnets.txt
    ```
-4. Create the database
+5. Create the database
    ```sh
    python manage.py makemigrations
    ```
    ```sh
    python manage.py migrate
    ```
-5. Run the app
+6. Run the app
    ```sh
    python manage.py runserver
    ```
