@@ -60,7 +60,7 @@ class ExamSerializer(serializers.ModelSerializer):
 
             if errors:
                 raise serializers.ValidationError(
-                    "One or more legs were invalid. " + str(errors))
+                    "One or more exam were invalid. " + str(errors))
 
             trip = super(ExamSerializer, self).update(instance, validated_data)
 
